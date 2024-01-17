@@ -8,6 +8,7 @@
 include/glm
 include/GLFW
 include/reactphysics3d
+include/assimp
 
 # Compiled Object files
 *.slo

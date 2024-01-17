@@ -18,6 +18,8 @@ class Texture
         inline std::string GetTextureName() const { return textureName; }
         inline int GetTextureWidth() const { return width; }
         inline int GetTextureHeight() const { return height; }
+
+        std::string type;
     private:
         unsigned int textureID;
         unsigned int wrap_s;

@@ -12,13 +12,13 @@ CFLAGS= -Wall -std=c++20
 INCLUDES= -Iinclude/ -Isrc/imgui
 
 #Archivos fuente del proyecto
-SRC= main.cpp glad.cpp Engine/System.cpp Render/Shader.cpp Render/Texture.cpp Engine/Scene.cpp Engine/Gameobject.cpp
+SRC= main.cpp glad.cpp Engine/System.cpp Render/Shader.cpp Render/Texture.cpp Render/SubMesh.cpp Render/Mesh.cpp Engine/Scene.cpp Engine/Gameobject.cpp
 SRC += Engine/Components/Transform.cpp Engine/Components/Camera.cpp
 SRC += imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_impl_glfw.cpp imgui/imgui_draw.cpp imgui/imgui_impl_opengl3.cpp imgui/imgui_tables.cpp imgui/imgui_widgets.cpp
 
 #Archivos de librerias
 
-BLIBS= -Llibs -lreactphysics3d -lglfw3dll -lopengl32 -lgdi32
+BLIBS= -Llibs -lreactphysics3d -lassimp.dll -lglfw3dll -lopengl32 -lgdi32
 #BLIBS= -Llibs -lreactphysics3d -lglfw
 
 #Nombre de rutas
