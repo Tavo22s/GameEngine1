@@ -4,7 +4,11 @@
 int main(int argc, char** argv)
 {
     std::string path = Utils::to_string<char*> (argv[0]);
-    int idx = path.find_last_of('\\') + 1;
+    #ifdef __linux__
+        int idx = path.find_last_of('/') + 1;
+    #else
+        int idx = path.find_last_of('\\') + 1;
+    #endif
     path = Utils::Ex(path, 0, idx);
 
     Utils::Path = path;

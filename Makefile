@@ -1,6 +1,6 @@
 #Output
-TARGET=bin/Physics.exe
-#TARGET=bin/Physics.out
+#TARGET=bin/Physics.exe
+TARGET=bin/Physics.out
 
 #Compiler
 CC=g++
@@ -18,8 +18,8 @@ SRC += imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_impl_glfw.cpp imgui/imgu
 
 #Archivos de librerias
 
-BLIBS= -Llibs -lreactphysics3d -lassimp.dll -lglfw3dll -lopengl32 -lgdi32
-#BLIBS= -Llibs -lreactphysics3d -lglfw
+#BLIBS= -Llibs -lreactphysics3d -lassimp.dll -lglfw3dll -lopengl32 -lgdi32
+BLIBS= -Llibs -lreactphysics3d -lglfw -lassimp
 
 #Nombre de rutas
 OBJ_DIR= obj
