@@ -24,7 +24,7 @@ void Scene::Init()
     gameObjects.push_back(cameraOBJ);
     cameraOBJ->transform->Translate(.0f, .0f, -2.f);
     
-    Mesh *mesh = new Mesh(Utils::attach_strings(Utils::Path, "assets\\models\\demon\\demon.fbx").c_str());
+    Mesh *mesh = new Mesh(Utils::attach_strings(Utils::Path, "assets/models/cj/CJ_GTASA.fbx").c_str());
     Shader *shader = LoadShader(Utils::attach_strings(Utils::Path, "assets/shaders/SimpleVertexShader.glsl").c_str(),
         Utils::attach_strings(Utils::Path, "assets/shaders/SimpleFragmentShader.glsl").c_str());
 

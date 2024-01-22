@@ -32,9 +32,12 @@ Texture *LoadTexture(const std::string &path)
 {
     Texture *texture = new Texture();
     texture->texture_path = path;
+    #ifdef __linux__
+        Utils::FixPathToLinux(texture->texture_path);
+    #endif
     glGenTextures(1, &texture->textureID);
     glBindTexture(GL_TEXTURE_2D, texture->textureID);
-    std::cout<<"Loading image from: "<<path<<std::endl;
+    std::cout<<"Loading image from: "<<texture->texture_path<<std::endl;
     texture->name = path;
     unsigned char *data = stbi_load(texture->texture_path.c_str(), &texture->width, &texture->height, &texture->channel, 0);
     if(data)

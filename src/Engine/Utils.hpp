@@ -27,6 +27,15 @@ namespace Utils
         return osstr.str();
     }
 
+    #ifdef __linux__
+        inline void FixPathToLinux(std::string &path)
+        {
+            for(std::size_t i=0; i < path.size(); i++)
+                if(path[i] == '\\')
+                    path[i] = '/';
+        }
+    #endif
+
     inline std::string Path = "";
     inline unsigned int Width = 0;
     inline unsigned int Height = 0;
