@@ -60,12 +60,12 @@ void Transform::Rotate(float x, float y, float z, float w)
 
 void Transform::Scale(glm::vec3 scl)
 {
-    scale += scl;
+    scale = scl;
 }
 
 void Transform::Scale(float x, float y, float z)
 {
-    scale += glm::vec3(x, y, z);
+    scale = glm::vec3(x, y, z);
 }
 
 glm::vec3 Transform::Front() const

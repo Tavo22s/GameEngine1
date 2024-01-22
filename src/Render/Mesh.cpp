@@ -116,6 +116,7 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
 std::vector<Texture*> Mesh::loadMaterialTexture(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
     std::vector<Texture*> textures;
+
     for(unsigned int i=0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;

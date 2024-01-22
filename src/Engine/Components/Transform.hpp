@@ -32,12 +32,17 @@ class Transform: public Component
         glm::vec3 Up() const;
         glm::vec3 Right() const;
 
+        //Wordl
         glm::vec3 position;
         glm::vec3 scale;
         glm::quat rotation;
 
     private:
         glm::mat4 model;
+
+        glm::vec3 localPosition;
+        glm::quat localRotation;
+        glm::vec3 localScale;
 };
 
 #endif //TRANSFORM_H
