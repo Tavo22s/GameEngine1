@@ -1,7 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Texture.hpp"
 #include <glad/glad.h>  
-#include <stb/stb_image.h>
+#include "stb_image.h"
 
 #include "../Engine/Utils.hpp"
 
@@ -28,41 +28,49 @@ void Texture::Render()
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
-void Texture::LoadTexture(std::string path)
+Texture *LoadTexture(const std::string &path)
 {
-    texture_path = path;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    
-    unsigned char *data = stbi_load(texture_path.c_str(), &width, &height, &channel, 0);
-    std::cout<<stbi_failure_reason()<<std::endl;
+    Texture *texture = new Texture();
+    texture->texture_path = path;
+    glGenTextures(1, &texture->textureID);
+    glBindTexture(GL_TEXTURE_2D, texture->textureID);
+    std::cout<<"Loading image from: "<<path<<std::endl;
+    texture->name = path;
+    unsigned char *data = stbi_load(texture->texture_path.c_str(), &texture->width, &texture->height, &texture->channel, 0);
     if(data)
     {
-        if(data[0] == '\0')
-            std::cout<<123<<std::endl;
         GLenum format;
-        if(channel == 1)
+        if(texture->channel == 1)
             format = GL_RED;
-        else if(channel == 3)
+        else if(texture->channel == 3)
             format = GL_RGB;
-        else if(channel == 4)
+        else if(texture->channel == 4)
             format = GL_RGBA;
         else
             std::cout<<"Error format image"<<std::endl;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, texture->width, texture->height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);	
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture->wrap_s);	
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture->wrap_t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture->filter_min);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture->filter_mag);
     }
     else
+    {
+        std::cout<<stbi_failure_reason()<<std::endl;
         std::cout<<"Error to load image"<<std::endl;
-    int idx = path.find_last_of('\\');
+    }
+    #ifdef __linux__
+        int idx = path.find_last_of('/') + 1;
+    #else
+        int idx = path.find_last_of('\\') + 1;
+    #endif
     if(idx != -1)
-        textureName = Utils::Ex(path, idx+1, path.length());
+        texture->textureName = Utils::Ex(path, idx+1, path.length());
     else
-        textureName = path;
+        texture->textureName = path;
     stbi_image_free(data);
+
+    return texture;
 }

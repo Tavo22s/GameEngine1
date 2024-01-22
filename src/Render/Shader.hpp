@@ -7,7 +7,6 @@
 class Shader
 {
     public:
-        Shader(const char*, const char*, const char* = nullptr);
         ~Shader();
 
         void use() const;
@@ -19,10 +18,19 @@ class Shader
         void setVec4(const std::string&, const glm::vec4 &) const;
         void setMat4(const std::string&, const glm::mat4 &) const;
 
+        friend Shader *LoadShader(const char*, const char*, const char*);
+        friend Shader *LoadShader(const char*, const char*);
+
         std::string name;
     private:
+        Shader();
+
+        bool InitShader(const char*, const char*, const char* = nullptr);
         unsigned int m_UIProgramID;
         unsigned int CreateShader(const char*, unsigned int);
 };
+
+Shader *LoadShader(const char*, const char*, const char*);
+Shader *LoadShader(const char*, const char*);
 
 #endif //SHADER_H

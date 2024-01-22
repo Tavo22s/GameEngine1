@@ -17,8 +17,8 @@ class Camera:public Component
         float near;
         float far;
         glm::mat4 viewMat;
-    private:
         glm::mat4 projMat;
+    private:
         float aspect;
 };
 

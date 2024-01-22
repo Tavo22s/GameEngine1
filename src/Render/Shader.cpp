@@ -6,17 +6,37 @@
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-
 using namespace std;
-Shader::Shader(const char *v_file_path, const char *f_file_path, const char* g_file_path)
+
+Shader::Shader()
+{
+}
+
+Shader::~Shader()
+{
+    glDeleteProgram(this->m_UIProgramID);
+}
+
+bool Shader::InitShader(const char *v_file_path, const char *f_file_path, const char* g_file_path)
 {
     unsigned int VertexShaderID = CreateShader(v_file_path, GL_VERTEX_SHADER);
+    if(!VertexShaderID)
+        return false;
     unsigned int FragmentShaderID = CreateShader(f_file_path, GL_FRAGMENT_SHADER);
+    if(!FragmentShaderID)
+        return false;
     unsigned int GeometryShaderID;
     if(g_file_path)
-     GeometryShaderID = CreateShader(g_file_path, GL_GEOMETRY_SHADER);
+    {
+        GeometryShaderID = CreateShader(g_file_path, GL_GEOMETRY_SHADER);
+        if(!GeometryShaderID)
+            return false;
+    }
+     
     cout<<"Link Program"<<endl;
     m_UIProgramID = glCreateProgram();
+    if(!m_UIProgramID)
+        return 0;
     glAttachShader(m_UIProgramID, VertexShaderID);
     glAttachShader(m_UIProgramID, FragmentShaderID);
     if(g_file_path)
@@ -34,6 +54,7 @@ Shader::Shader(const char *v_file_path, const char *f_file_path, const char* g_f
         vector<char> ProgramErrorMessage(infoLogLength+1);
         glGetProgramInfoLog(m_UIProgramID, infoLogLength, nullptr, &ProgramErrorMessage[0]);
         cout<<&ProgramErrorMessage[0]<<endl;
+        return false;
     }
 
     glDetachShader(m_UIProgramID, VertexShaderID);
@@ -44,11 +65,8 @@ Shader::Shader(const char *v_file_path, const char *f_file_path, const char* g_f
     glDeleteShader(FragmentShaderID);
     if(g_file_path)
         glDeleteShader(GeometryShaderID);
-}
 
-Shader::~Shader()
-{
-    glDeleteProgram(this->m_UIProgramID);
+    return true;
 }
 
 unsigned int Shader::CreateShader(const char *shader, unsigned int type)
@@ -133,4 +151,24 @@ void Shader::setVec4(const std::string &name, const glm::vec4 &vec) const
 void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(m_UIProgramID, name.c_str()), 1, false, glm::value_ptr(mat));
+}
+
+Shader *LoadShader(const char* vs, const char*fs, const char*gs)
+{
+    Shader *shader = new Shader();
+    
+    if(shader->InitShader(vs, fs, gs))
+        return shader;
+    
+    delete shader;
+    return nullptr;
+}
+
+Shader *LoadShader(const char* vs, const char* fs)
+{
+    Shader *shader = new Shader();
+    if(shader->InitShader(vs, fs, nullptr))
+        return shader;
+    delete shader;
+    return nullptr;
 }

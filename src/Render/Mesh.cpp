@@ -8,22 +8,26 @@ Mesh::Mesh(std::string const &path, bool gamma): gammaCorrection(gamma)
 
 void Mesh::Render(Shader *shader)
 {
-    for(auto sm: submeshes)
-        sm->Render(shader);
+    for(auto s:submeshes)
+        s->Render(shader);
 }
 
 void Mesh::loadModel(std::string const &_path)
 {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    std::cout<<_path<<std::endl;
+    const aiScene *scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cout<<"ERROR::ASSIMP:: "<<importer.GetErrorString()<<std::endl;
         return;
     }
-
-    path = _path.substr(0, _path.find_last_of('/'));
+    #ifdef __linux__
+        path = _path.substr(0, _path.find_last_of('/'));
+    #else
+        path = _path.substr(0, _path.find_last_of('\\'));
+    #endif
     processNode(scene->mRootNode, scene);
 }
 
@@ -68,6 +72,7 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
 
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
+            vertex.TexCoords = vec;
 
             vector.x = mesh->mTangents[i].x;
             vector.y = mesh->mTangents[i].y;
@@ -128,10 +133,12 @@ std::vector<Texture*> Mesh::loadMaterialTexture(aiMaterial *mat, aiTextureType t
         }
         if(!skip)
         {
-            Texture *texture = new Texture();
+            Texture *texture;
             std::string filename = std::string(str.C_Str());
-            filename = Utils::attach_strings(path, filename);
-            texture->LoadTexture(filename);
+            std::string tmp = Utils::attach_strings(path, "/");
+            filename = Utils::attach_strings(tmp, filename);
+            texture = LoadTexture(filename);
+            texture->type = typeName;
             textures.push_back(texture);
             textures_loaded.push_back(texture);
         }

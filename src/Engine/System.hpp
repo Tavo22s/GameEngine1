@@ -3,6 +3,7 @@
 
 #include <GLFW/glfw3.h>
 #include "Scene.hpp"
+#include "ResourcesManager.hpp"
 
 class System
 {
@@ -28,6 +29,7 @@ class System
 
         GLFWwindow *m_pWindow;
         Scene *m_pScene;
+        ResourcesManager *m_pResourcesManager;
 
         unsigned int m_iWidth;
         unsigned int m_iHeight;

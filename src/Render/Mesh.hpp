@@ -18,12 +18,12 @@ class Mesh
         std::vector<SubMesh*> submeshes;
         std::string path;
         bool gammaCorrection;
+        std::string name;
     private:
         void loadModel(std::string const &path);
         void processNode(aiNode *node, const aiScene *scene);
         SubMesh *processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture*> loadMaterialTexture(aiMaterial *mat, aiTextureType type, std::string typeName);
-
 };
 
 #endif //MESH_H

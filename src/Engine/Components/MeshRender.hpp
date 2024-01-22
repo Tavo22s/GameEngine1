@@ -2,7 +2,7 @@
 #define MESHRENDER_H
 
 #include "Component.hpp"
-#include "../Render/Mesh.cpp"
+#include "../Render/Mesh.hpp"
 
 class MeshRender:public Component
 {
@@ -12,8 +12,8 @@ class MeshRender:public Component
 
         void Render();
 
-        inline void SetShader(Shader *shader)   const   {  m_pShader = shader;  }
-        inline void SetMesh(Mesh *mesh)  const  {   m_pMesh = Mesh; }
+        inline void SetShader(Shader *shader)   {  m_pShader = shader;  }
+        inline void SetMesh(Mesh *mesh) {   m_pMesh = mesh; }
     private:
         Shader *m_pShader;
         Mesh *m_pMesh;

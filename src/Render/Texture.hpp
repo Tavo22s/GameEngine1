@@ -6,11 +6,9 @@
 class Texture
 {
     public:
-        Texture();
         ~Texture();
 
         void Render();
-        void LoadTexture(std::string path);
 
         inline void ShowDialogConfig() { showWindow = true; }
         inline unsigned int GetID() const   {   return textureID;   }
@@ -20,6 +18,9 @@ class Texture
         inline int GetTextureHeight() const { return height; }
 
         std::string type;
+        std::string name;
+
+        friend Texture *LoadTexture(const std::string &path);
     private:
         unsigned int textureID;
         unsigned int wrap_s;
@@ -33,6 +34,10 @@ class Texture
         int height;
         int channel;
         bool showWindow;
+
+        Texture();
 };
+
+Texture *LoadTexture(const std::string &path);
 
 #endif // !TEXTURE_H

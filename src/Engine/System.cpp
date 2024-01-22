@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include "System.hpp"
 #include "Time.hpp"
+#include "Input.hpp"
+#include "stb_image.h"
 #include "Configs.hpp"
 
 #include <iostream>
@@ -15,6 +17,7 @@ System::System(unsigned int width, unsigned int height)
     m_iWidth = width;
     m_iHeight = height;
     m_pWindow = nullptr;
+    m_pResourcesManager = nullptr;
     Config::WIDTH = width;
     Config::HEIGHT = height;
 }
@@ -63,9 +66,11 @@ bool System::Init()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    Time.time = glfwGetTime();
+    Time.lastFrame = Time.time;
 
-    Time::time = glfwGetTime();
-    Time::lastFrame = Time::time;
+    Input = __INPUT__();
 
     m_pScene = new Scene("test");
     m_pScene->Init();
@@ -81,8 +86,10 @@ void System::Loop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Update();
-        RenderGUI();
         Render();
+        RenderGUI();
+
+        Input.Update();
 
         glfwSwapBuffers(m_pWindow);
         glfwPollEvents();
@@ -103,14 +110,35 @@ void System::ViewportResize(int w, int h)
 
 void System::KeyController(int key, int action)
 {
+    switch (action)
+    {
+        case 0:
+            Input.SetKeyUp(key);
+            break;
+        case 1:
+            Input.SetKeyDown(key);
+            break;
+        case 2:
+            Input.keys[key] = KEY_PRESS;
+            break;
+        default:
+            break;
+    }
 }
 
 void System::MousePosition(double xPos, double yPos)
 {
+    Input.mousePosition.x = float(xPos);
+    Input.mousePosition.y = float(yPos);
 }
 
 void System::MouseButton(int button, int action)
 {
+    if(action)
+        Input.buttons[button] = KEY_DOWN;
+    else
+        Input.buttons[button] = KEY_UP;
+
 }
 
 void System::Scroll(double yoffset)
@@ -125,9 +153,9 @@ bool System::Render()
 
 bool System::Update()
 {
-    Time::time = glfwGetTime();
-    Time::deltaTime = Time::time - Time::lastFrame;
-    Time::lastFrame = Time::time;
+    Time.time = glfwGetTime();
+    Time.deltaTime = Time.time - Time.lastFrame;
+    Time.lastFrame = Time.time;
 
     m_pScene->Update();
 
@@ -159,8 +187,8 @@ void System::RenderGUI()
     //RenderGUI
 
     ImGui::Begin("Test");
-    ImGui::Text("Time: %.2f", Time::time);
-    ImGui::Text("Delta Time: %.2f", Time::deltaTime);
+    ImGui::Text("Time: %.2f", Time.time);
+    ImGui::Text("Delta Time: %.2f", Time.deltaTime);
     ImGui::End();
 
     ImGui::Render();

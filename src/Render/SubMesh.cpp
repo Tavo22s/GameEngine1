@@ -30,9 +30,9 @@ void SubMesh::Render(Shader *shader)
             number = Utils::to_string(normalNr++);
         else if(name == "texture_height")
             number = Utils::to_string(heightNr++);
-
-        shader->setInt(Utils::attach_strings(name, number), i);
-        textures[0]->Render();
+        std::string str = Utils::attach_strings(name, number);
+        shader->setInt(Utils::attach_strings(str, number), i);
+        textures[i]->Render();
     }
 
     glBindVertexArray(m_UIVAO);
