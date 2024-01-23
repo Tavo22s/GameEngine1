@@ -9,7 +9,6 @@
 class Mesh
 {
     public:
-        Mesh(std::string const &path, bool gamma = false);
         ~Mesh();
 
         void Render(Shader *shader);
@@ -19,11 +18,16 @@ class Mesh
         std::string path;
         bool gammaCorrection;
         std::string name;
+
+        friend Mesh *LoadMesh(const std::string &path, bool gamma);
     private:
-        void loadModel(std::string const &path);
+        Mesh();
+        bool loadModel(std::string path, bool gamma);
         void processNode(aiNode *node, const aiScene *scene);
         SubMesh *processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture*> loadMaterialTexture(aiMaterial *mat, aiTextureType type, std::string typeName);
 };
+
+Mesh *LoadMesh(const std::string &path, bool gamma = false);
 
 #endif //MESH_H

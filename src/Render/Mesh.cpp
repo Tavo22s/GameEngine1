@@ -1,9 +1,9 @@
 #include "Mesh.hpp"
 #include "../Engine/Utils.hpp"
 
-Mesh::Mesh(std::string const &path, bool gamma): gammaCorrection(gamma)
+Mesh::Mesh()
 {
-    loadModel(path);
+
 }
 
 void Mesh::Render(Shader *shader)
@@ -12,16 +12,21 @@ void Mesh::Render(Shader *shader)
         s->Render(shader);
 }
 
-void Mesh::loadModel(std::string const &_path)
+bool Mesh::loadModel(std::string _path, bool gamma)
 {
+    gammaCorrection = gamma;
     Assimp::Importer importer;
+    _path = std::string(_path);
+    #ifdef __linux__
+        Utils::FixPathToLinux(_path);
+    #endif
     std::cout<<_path<<std::endl;
     const aiScene *scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cout<<"ERROR::ASSIMP:: "<<importer.GetErrorString()<<std::endl;
-        return;
+        return false;
     }
     #ifdef __linux__
         path = _path.substr(0, _path.find_last_of('/'));
@@ -29,6 +34,7 @@ void Mesh::loadModel(std::string const &_path)
         path = _path.substr(0, _path.find_last_of('\\'));
     #endif
     processNode(scene->mRootNode, scene);
+    return true;
 }
 
 void Mesh::processNode(aiNode *node, const aiScene *scene)
@@ -145,4 +151,17 @@ std::vector<Texture*> Mesh::loadMaterialTexture(aiMaterial *mat, aiTextureType t
         }
     }
     return textures;
+}
+
+Mesh *LoadMesh(const std::string &path, bool gamma)
+{
+    Mesh *mesh = new Mesh();
+    if(mesh)
+    {
+        if(mesh->loadModel(path, gamma))
+        {
+            return mesh;
+        }
+    }
+    return nullptr;
 }

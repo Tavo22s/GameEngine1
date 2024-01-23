@@ -30,7 +30,7 @@ void Scene::Init()
     cameraParent->AddChildren(cameraOBJ);
     gameObjects.push_back(cameraParent);
 
-    Mesh *mesh = new Mesh(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
+    Mesh *mesh = LoadMesh(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
     Shader *shader = LoadShader(Utils::attach_strings(Utils::Path, "assets/shaders/SimpleVertexShader.glsl").c_str(),
         Utils::attach_strings(Utils::Path, "assets/shaders/SimpleFragmentShader.glsl").c_str());
 
@@ -62,5 +62,5 @@ void Scene::Update()
 {
     for(auto g:gameObjects)
         g->Update();
-    cameraParent->transform->Rotate(.0f, 20.f * Time.deltaTime, .0f);   
+    cameraParent->transform->Rotate(.0f, 1.f * Time.deltaTime, .0f);   
 }
