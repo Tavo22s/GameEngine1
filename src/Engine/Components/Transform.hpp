@@ -28,6 +28,10 @@ class Transform: public Component
 
         inline glm::mat4 GetOpenGLMat()    const   {   return model;   }
 
+        inline glm::vec3 GetLocalPosition() const   {   return localPosition;   }
+        inline glm::quat GetLocalRotation() const   {   return localRotation;   }
+        inline glm::vec3 GetLocalScale()    const   {   return localScale;  }
+
         glm::vec3 Front() const;
         glm::vec3 Up() const;
         glm::vec3 Right() const;
@@ -43,6 +47,8 @@ class Transform: public Component
         glm::vec3 localPosition;
         glm::quat localRotation;
         glm::vec3 localScale;
+
+        glm::mat4 GetLocalModelMatrix();
 };
 
 #endif //TRANSFORM_H

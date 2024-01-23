@@ -6,7 +6,7 @@
 Camera::Camera(GameObject *gO, Scene* sn):Component("camera", gO, sn)
 {
     aspect = float(Config::WIDTH) / float(Config::HEIGHT);
-    FOV = 90.f;
+    FOV = 45.f;
     near = 0.1f;
     far = 100.f;
 }

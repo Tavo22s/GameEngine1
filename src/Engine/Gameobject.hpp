@@ -44,7 +44,21 @@ class GameObject
             return nullptr;
         }
 
+        inline GameObject *AddChildren(GameObject *child)
+        {
+            if(child)
+            {
+                childrens.push_back(child);
+                child->parent = this;
+                return child;
+            }
+            return nullptr;
+        }
+
         std::vector<Component*> components;
+        std::vector<GameObject*> childrens;
+
+        GameObject *parent;
 
         Transform *transform;
         Scene *scene;

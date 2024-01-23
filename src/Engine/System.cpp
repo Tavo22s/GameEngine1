@@ -106,6 +106,8 @@ void System::ViewportResize(int w, int h)
     glViewport(0, 0, w, h);
     m_iWidth = w;
     m_iHeight = h;
+    Config::WIDTH = w;
+    Config::HEIGHT = h;
 }
 
 void System::KeyController(int key, int action)
