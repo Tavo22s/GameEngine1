@@ -8,7 +8,7 @@ Animation::Animation()
 {
     speed = 1.f;
     duration = .0f;
-    name = "default";
+    name = "void";
     ticks_per_second = 25.f;
 }
 

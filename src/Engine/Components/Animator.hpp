@@ -4,6 +4,7 @@
 #include "Component.hpp"
 #include "../Render/Animation.hpp"
 #include "../Render/Mesh.hpp"
+#include "SkinnedMeshRender.hpp"
 
 class Animator:public Component
 {
@@ -15,6 +16,10 @@ class Animator:public Component
         void Update();
     
         Animation *m_pAnimation;
+        GameObject *m_pRoot;
+        inline void SetMesh(Mesh *mesh) {   m_pMesh = mesh;  }
+        inline void SetSkinnedMeshRender(SkinnedMeshRender *ps) {   m_pSkinnedMeshRender = ps;  } 
+        
     private:
         void boneTransform(double time_in_sec, std::vector<glm::mat4> &transforms);
         void readNodeHiearchy(float p_animation_time, const GameObject *pNode, glm::mat4 parent_transform);
@@ -24,6 +29,8 @@ class Animator:public Component
         glm::quat nlerp(glm::quat start, glm::quat end, float factor);
 
         Mesh *m_pMesh;
+        SkinnedMeshRender *m_pSkinnedMeshRender;
+        float aniTime;
 };
 
 #endif

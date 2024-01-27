@@ -17,10 +17,11 @@ class SkinnedMeshRender: public Component
         inline void SetMesh(Mesh *mesh) {   m_pMesh = mesh; }
 
         inline Mesh *GetMesh()  const   {   return m_pMesh; }
-
+        std::vector<glm::mat4> transforms;
     private:
         Shader *m_pShader;
         Mesh *m_pMesh;
+        
 };
 
 #endif //SKINNEDMESHRENDER_H

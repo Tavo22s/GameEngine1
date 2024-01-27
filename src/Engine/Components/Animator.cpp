@@ -1,9 +1,11 @@
 #include "Animator.hpp"
-#include "SkinnedMeshRender.hpp"
+#include "../Time.hpp"
 
 Animator::Animator(GameObject *gO, Scene *sn):Component("animator", gO, sn)
 {
-
+    aniTime = .0f;
+    m_pAnimation = nullptr;
+    m_pRoot = nullptr;
 }
 
 Animator::~Animator()
@@ -12,26 +14,29 @@ Animator::~Animator()
 
 void Animator::Init()
 {
-    SkinnedMeshRender *ps = gameObject->GetComponent<SkinnedMeshRender> ();
-    if(ps)
-        m_pMesh = ps->GetMesh();
-    else
-        std::cout<<"Error to load skinnedmeshrender"<<std::endl;
+    m_pRoot = gameObject->childrens[0];
 }
 
 void Animator::Update()
 {
-
+    if(m_pAnimation && m_pRoot)
+    {
+        m_pSkinnedMeshRender->transforms.clear();
+        boneTransform(aniTime, m_pSkinnedMeshRender->transforms);
+        aniTime += Time.deltaTime * m_pAnimation->GetSpeed();
+    }
 }
 
 void Animator::boneTransform(double time_in_sec, std::vector<glm::mat4> &transforms)
 {
-    glm::mat4 indetity_mat = glm::mat4(1.f);
+    glm::mat4 identity_mat = glm::mat4(1.f);
     double time_in_ticks = time_in_sec * m_pAnimation->GetTicksPerSecond();
     float animation_time = fmod(time_in_ticks, m_pAnimation->GetDuration());
-    //
-    m_pAnimation->transforms.clear();
-    m_pAnimation->transforms.resize(m_pMesh->m_num_bones);
+    
+    readNodeHiearchy(animation_time, m_pRoot, identity_mat);
+    transforms.resize(m_pMesh->m_num_bones);
+    for(unsigned int i=0; i<m_pMesh->m_num_bones; i++)
+        transforms[i] = m_pMesh->m_bone_matrices[i].final_world_transform;
 }
 
 void Animator::readNodeHiearchy(float p_animation_time, const GameObject *pNode, glm::mat4 parent_transform)

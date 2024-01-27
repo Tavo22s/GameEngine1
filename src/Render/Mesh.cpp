@@ -3,8 +3,8 @@
 
 Mesh::Mesh()
 {
-    scene = nullptr;
     m_BoneCounter = 0;
+    m_num_bones = 0;
 }
 
 void Mesh::Render(Shader *shader)
@@ -22,7 +22,8 @@ bool Mesh::loadModel(std::string _path, bool gamma)
         Utils::FixPathToLinux(_path);
     #endif
     std::cout<<_path<<std::endl;
-    scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+    complet_path = _path;
+    const aiScene *scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -124,6 +125,23 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
     
     ExtractBoneWeightForVertices(vertices, mesh, scene);
 
+    for(unsigned int i=0;i<mesh->mNumBones; i++)
+    {
+        unsigned int bone_index = 0;
+        std::string bone_name(mesh->mBones[i]->mName.data);
+        if(m_bone_mapping.find(bone_name) == m_bone_mapping.end())
+        {
+            bone_index = m_num_bones;
+            m_num_bones++;
+            BoneMatrix bi;
+            m_bone_matrices.push_back(bi);
+            m_bone_matrices[bone_index].offset_matrix = aiMatrix4x4ToGlm(&mesh->mBones[i]->mOffsetMatrix);
+            m_bone_mapping[bone_name] = bone_index;
+        }
+        else
+            bone_index = m_bone_mapping[bone_name];
+    }
+
     return new SubMesh(vertices, indices, textures);
 }
 
@@ -176,6 +194,8 @@ Mesh *LoadMesh(const std::string &path, bool gamma)
 
 GameObject *Mesh::GetMakedModel(Scene *sn)
 {
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile(complet_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
     return ProcessNode(scene->mRootNode, sn);
 }
 

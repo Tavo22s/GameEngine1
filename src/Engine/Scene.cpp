@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 #include "Components/MeshRender.hpp"
 #include "Components/SkinnedMeshRender.hpp"
+#include "Components/Animator.hpp"
 #include "Utils.hpp"
 #include "Time.hpp"
 #include "Input.hpp"
@@ -34,11 +35,16 @@ void Scene::Init()
     Mesh *mesh = LoadMesh(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
     Shader *shader = LoadShader(Utils::attach_strings(Utils::Path, "assets/shaders/SimpleVertexShader.glsl").c_str(),
         Utils::attach_strings(Utils::Path, "assets/shaders/SimpleFragmentShader.glsl").c_str());
+    std::vector<Animation*> vanim = LoadAnimation(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
 
     GameObject *parent = new GameObject("cjParent", this);
-
     GameObject *cj = new GameObject("cj", this, false);
     SkinnedMeshRender *meshrender = cj->AddComponent<SkinnedMeshRender> ();
+    Animator *animator = cj->AddComponent<Animator> ();
+    animator->SetSkinnedMeshRender(meshrender);
+    animator->SetMesh(mesh);
+    animator->m_pAnimation = vanim[2];
+
     meshrender->SetMesh(mesh);
     meshrender->SetShader(shader);
 
@@ -46,7 +52,7 @@ void Scene::Init()
 
     cj->transform->Rotate(0.f, 180.0f, .0f);
     cj->transform->Scale(.01f, .01f, .01f);
-
+    
     parent->childrens.push_back(cj);
     gameObjects.push_back(parent);
     for(auto g:gameObjects)

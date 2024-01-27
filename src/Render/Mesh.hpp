@@ -51,8 +51,8 @@ class Mesh
         void SetVertexBoneData(Vertex &vertex, int boneID, float weight);
         void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh *mesh, const aiScene *scene);
 
-        const aiScene *scene;
         std::map<std::string, BoneInfo> m_boneInfoMap;
+        std::string complet_path;
         int m_BoneCounter;
 };
 

@@ -23,7 +23,6 @@ class Animation
         friend std::vector<Animation *>LoadAnimation(std::string);
 
         std::string name;
-        std::vector<glm::mat4> transforms;
 
         inline double GetDuration() const   {   return duration;    }
         inline double GetSpeed()    const   {   return speed;   }
