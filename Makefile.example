@@ -12,8 +12,8 @@ CFLAGS= -Wall -std=c++20
 INCLUDES= -Iinclude/ -Isrc/imgui
 
 #Archivos fuente del proyecto
-SRC= main.cpp glad.cpp Engine/System.cpp Render/Shader.cpp Render/Texture.cpp Render/SubMesh.cpp Render/Mesh.cpp Engine/Scene.cpp Engine/Gameobject.cpp
-SRC += Engine/Components/Transform.cpp Engine/Components/Camera.cpp
+SRC= main.cpp glad.cpp Engine/System.cpp Render/Shader.cpp Render/Texture.cpp Render/SubMesh.cpp Render/Mesh.cpp Engine/Input.cpp Engine/Scene.cpp Engine/Gameobject.cpp Engine/ResourcesManager.cpp Render/Animation.cpp
+SRC += Engine/Components/Transform.cpp Engine/Components/Camera.cpp Engine/Components/MeshRender.cpp Engine/Components/SkinnedMeshRender.cpp
 SRC += imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_impl_glfw.cpp imgui/imgui_draw.cpp imgui/imgui_impl_opengl3.cpp imgui/imgui_tables.cpp imgui/imgui_widgets.cpp
 
 #Archivos de librerias

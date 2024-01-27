@@ -26,27 +26,34 @@ class Transform: public Component
         void Scale(glm::vec3);
         void Scale(float, float, float);
 
+        void SetTransform(glm::mat4);
+
         inline glm::mat4 GetOpenGLMat()    const   {   return model;   }
 
         inline glm::vec3 GetLocalPosition() const   {   return localPosition;   }
         inline glm::quat GetLocalRotation() const   {   return localRotation;   }
         inline glm::vec3 GetLocalScale()    const   {   return localScale;  }
 
+        inline glm::vec3 GetPosition() const   {   return position;    }
+        inline glm::quat GetRotation() const   {   return rotation;    }
+        inline glm::vec3 GetScale() const   {   return scale;   }
+
         glm::vec3 Front() const;
         glm::vec3 Up() const;
-        glm::vec3 Right() const;
+        glm::vec3 Right() const;      
+
+    private:
+        glm::mat4 model;
+
+        //Local
+        glm::vec3 localPosition;
+        glm::quat localRotation;
+        glm::vec3 localScale;
 
         //Wordl
         glm::vec3 position;
         glm::vec3 scale;
         glm::quat rotation;
-
-    private:
-        glm::mat4 model;
-
-        glm::vec3 localPosition;
-        glm::quat localRotation;
-        glm::vec3 localScale;
 
         glm::mat4 GetLocalModelMatrix();
 };

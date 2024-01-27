@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 #include "Components/MeshRender.hpp"
+#include "Components/SkinnedMeshRender.hpp"
 #include "Utils.hpp"
 #include "Time.hpp"
 #include "Input.hpp"
@@ -37,7 +38,7 @@ void Scene::Init()
     GameObject *parent = new GameObject("cjParent", this);
 
     GameObject *cj = new GameObject("cj", this, false);
-    MeshRender *meshrender = cj->AddComponent<MeshRender> ();
+    SkinnedMeshRender *meshrender = cj->AddComponent<SkinnedMeshRender> ();
     meshrender->SetMesh(mesh);
     meshrender->SetShader(shader);
 
@@ -61,6 +62,5 @@ void Scene::Render()
 void Scene::Update()
 {
     for(auto g:gameObjects)
-        g->Update();
-    cameraParent->transform->Rotate(.0f, 1.f * Time.deltaTime, .0f);   
+        g->Update(); 
 }

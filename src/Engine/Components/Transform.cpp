@@ -1,5 +1,6 @@
 #include "Transform.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include "../Gameobject.hpp"
 
 Transform::Transform(GameObject *gO, Scene* sn):Component("transform", gO, sn)
@@ -29,7 +30,9 @@ void Transform::Update()
         model = gameObject->parent->transform->GetLocalModelMatrix() * tmp;
     else
         model = tmp;
-    position = model[3];
+    glm::vec3 tmp1;
+    glm::vec4 tmp2;
+    glm::decompose(model, scale, rotation, position, tmp1, tmp2);
 }
 
 void Transform::Translate(glm::vec3 pos)
@@ -70,6 +73,21 @@ void Transform::Scale(glm::vec3 scl)
 void Transform::Scale(float x, float y, float z)
 {
     localScale = glm::vec3(x, y, z);
+}
+
+void Transform::SetTransform(glm::mat4 mat3)
+{
+    glm::mat4 mat2 = mat3;
+    if(gameObject->parent)
+    {
+        glm::mat4 mat1 = gameObject->parent->transform->GetLocalModelMatrix();
+        glm::mat4 mat1_inverse = glm::inverse(mat1);
+        mat2 = mat1_inverse * mat3;
+    }
+    
+    glm::vec3 tmp1;
+    glm::vec4 tmp2;
+    glm::decompose(mat2, localScale, localRotation, localPosition, tmp1, tmp2);
 }
 
 glm::vec3 Transform::Front() const

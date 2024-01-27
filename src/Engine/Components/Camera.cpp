@@ -18,15 +18,15 @@ Camera::~Camera()
 void Camera::Init()
 {
     projMat = glm::perspective(glm::radians(FOV), aspect, near, far);
-    viewMat = glm::lookAt(gameObject->transform->position, 
-        gameObject->transform->position + gameObject->transform->Front(),
+    viewMat = glm::lookAt(gameObject->transform->GetPosition(), 
+        gameObject->transform->GetPosition() + gameObject->transform->Front(),
         gameObject->transform->Up());
 }
 
 void Camera::Update()
 {
     projMat = glm::perspective(glm::radians(FOV), aspect, near, far);
-    viewMat = glm::lookAt(gameObject->transform->position, 
-        gameObject->transform->position + gameObject->transform->Front(),
+    viewMat = glm::lookAt(gameObject->transform->GetPosition(), 
+        gameObject->transform->GetPosition() + gameObject->transform->Front(),
         gameObject->transform->Up());
 }
