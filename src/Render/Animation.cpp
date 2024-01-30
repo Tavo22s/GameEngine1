@@ -1,5 +1,7 @@
 #include "Animation.hpp"
 
+#include "../Engine/Utils.hpp"
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -18,6 +20,10 @@ Animation::~Animation()
 
 std::vector<Animation *>LoadAnimation(std::string path)
 {
+    path = std::string(path);
+    #ifdef __linux__
+        Utils::FixPathToLinux(path);
+    #endif
     Assimp::Importer import;
     const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
