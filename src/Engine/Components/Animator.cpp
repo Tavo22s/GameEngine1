@@ -6,6 +6,7 @@ Animator::Animator(GameObject *gO, Scene *sn):Component("animator", gO, sn)
     aniTime = .0f;
     m_pAnimation = nullptr;
     m_pRoot = nullptr;
+    m_pTransitionAnimation = nullptr;
 }
 
 Animator::~Animator()
@@ -22,9 +23,56 @@ void Animator::Update()
     if(m_pAnimation && m_pRoot)
     {
         m_pSkinnedMeshRender->transforms.clear();
+        
+        float totalAnimationTime = m_pAnimation->GetDuration() / m_pAnimation->GetTicksPerSecond();
+
+        float transitionFactor = glm::clamp(aniTime / totalAnimationTime, .0f, 1.f);
+
         boneTransform(aniTime, m_pSkinnedMeshRender->transforms);
-        aniTime += Time.deltaTime * m_pAnimation->GetSpeed();
+
+        if(m_pTransitionAnimation)
+        {
+            std::vector<glm::mat4> transitionTransform;
+            boneTransform(aniTime, transitionTransform);
+
+            for(std::size_t i=0; i < m_pSkinnedMeshRender->transforms.size(); ++i)
+            {
+                for (int row = 0; row < 4; ++row)
+                {
+                    for (int col = 0; col < 4; ++col)
+                    {
+                        m_pSkinnedMeshRender->transforms[i][row][col] =
+                            m_pSkinnedMeshRender->transforms[i][row][col] * (1.0f - transitionFactor) +
+                            transitionTransform[i][row][col] * transitionFactor;
+                    }
+                }
+            }
+
+            aniTime += Time.deltaTime * m_pTransitionAnimation->speed;
+            if(aniTime >= totalAnimationTime + m_fTransitionDuration)
+            {
+                m_pAnimation = m_pTransitionAnimation;
+                m_pTransitionAnimation = nullptr;
+                aniTime = .0f;
+            }
+        }
+        else
+        {
+            aniTime += Time.deltaTime * m_pAnimation->speed;
+        } 
     }
+}
+
+void Animator::SetAnimation(Animation *pAnimation)
+{
+    aniTime = .0f;
+    m_pAnimation = pAnimation;
+}
+
+void Animator::SetTransitionAnimation(Animation *pTransitionAnimation, float transitionDuration)
+{
+    m_pTransitionAnimation = pTransitionAnimation;
+    m_fTransitionDuration = transitionDuration;
 }
 
 void Animator::boneTransform(double time_in_sec, std::vector<glm::mat4> &transforms)

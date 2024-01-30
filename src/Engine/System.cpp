@@ -66,7 +66,7 @@ bool System::Init()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
     Time.time = glfwGetTime();
     Time.lastFrame = Time.time;
 

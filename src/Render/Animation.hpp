@@ -23,9 +23,9 @@ class Animation
         friend std::vector<Animation *>LoadAnimation(std::string);
 
         std::string name;
+        double speed;
 
         inline double GetDuration() const   {   return duration;    }
-        inline double GetSpeed()    const   {   return speed;   }
         inline double GetTicksPerSecond()   const   {   return ticks_per_second;    }
         inline std::map<std::string, std::vector<TransformKey*>> GetRootKeys()  const   {   return RootKeys;    }
 
@@ -33,7 +33,7 @@ class Animation
         Animation();
         std::map<std::string, std::vector<TransformKey*>> RootKeys;
         double duration;
-        double speed;
+        
         double ticks_per_second;
 };
 

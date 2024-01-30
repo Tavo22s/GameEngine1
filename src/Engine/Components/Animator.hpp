@@ -15,10 +15,11 @@ class Animator:public Component
         void Init();
         void Update();
     
-        Animation *m_pAnimation;
         GameObject *m_pRoot;
         inline void SetMesh(Mesh *mesh) {   m_pMesh = mesh;  }
-        inline void SetSkinnedMeshRender(SkinnedMeshRender *ps) {   m_pSkinnedMeshRender = ps;  } 
+        inline void SetSkinnedMeshRender(SkinnedMeshRender *ps) {   m_pSkinnedMeshRender = ps;  }
+        void SetTransitionAnimation(Animation *pTransitionAnimation, float transitionDuration);
+        void SetAnimation(Animation *pAnimation);
         
     private:
         void boneTransform(double time_in_sec, std::vector<glm::mat4> &transforms);
@@ -28,9 +29,12 @@ class Animator:public Component
         glm::vec3 InterpolateVec3(glm::vec3 start, glm::vec3 end, float factor);
         glm::quat nlerp(glm::quat start, glm::quat end, float factor);
 
+        Animation *m_pAnimation;
+        Animation *m_pTransitionAnimation;
         Mesh *m_pMesh;
         SkinnedMeshRender *m_pSkinnedMeshRender;
         float aniTime;
+        float m_fTransitionDuration;
 };
 
 #endif

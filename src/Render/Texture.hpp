@@ -21,6 +21,7 @@ class Texture
         std::string name;
 
         friend Texture *LoadTexture(const std::string &path);
+        friend Texture *LoadVoidTexture(unsigned int width, unsigned int height);
     private:
         unsigned int textureID;
         unsigned int wrap_s;
@@ -39,5 +40,6 @@ class Texture
 };
 
 Texture *LoadTexture(const std::string &path);
+Texture *LoadVoidTexture(unsigned int width, unsigned int height);
 
 #endif // !TEXTURE_H

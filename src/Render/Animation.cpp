@@ -16,6 +16,7 @@ Animation::Animation()
 
 Animation::~Animation()
 {
+    
 }
 
 std::vector<Animation *>LoadAnimation(std::string path)

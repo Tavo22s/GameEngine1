@@ -7,9 +7,10 @@
 #include "Input.hpp"
 
 unsigned int VAO;
-
+std::vector<Animation*> vanim;
 GameObject *cameraParent;
 GameObject *cameraOBJ;
+Animator *animator;
 
 Scene::Scene(std::string _name)
 {
@@ -35,15 +36,16 @@ void Scene::Init()
     Mesh *mesh = LoadMesh(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
     Shader *shader = LoadShader(Utils::attach_strings(Utils::Path, "assets/shaders/SimpleVertexShader.glsl").c_str(),
         Utils::attach_strings(Utils::Path, "assets/shaders/SimpleFragmentShader.glsl").c_str());
-    std::vector<Animation*> vanim = LoadAnimation(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
+    vanim = LoadAnimation(Utils::attach_strings(Utils::Path, "assets\\models\\Mutant\\Mutant.fbx").c_str());
+    vanim[3]->speed = .5f;
 
     GameObject *parent = new GameObject("cjParent", this);
     GameObject *cj = new GameObject("cj", this, false);
     SkinnedMeshRender *meshrender = cj->AddComponent<SkinnedMeshRender> ();
-    Animator *animator = cj->AddComponent<Animator> ();
+    animator = cj->AddComponent<Animator> ();
     animator->SetSkinnedMeshRender(meshrender);
     animator->SetMesh(mesh);
-    animator->m_pAnimation = vanim[2];
+    animator->SetAnimation(vanim[2]);
 
     meshrender->SetMesh(mesh);
     meshrender->SetShader(shader);
@@ -68,5 +70,9 @@ void Scene::Render()
 void Scene::Update()
 {
     for(auto g:gameObjects)
-        g->Update(); 
+        g->Update();
+    if(Input.GetKeyDown('W'))
+        animator->SetAnimation(vanim[3]);
+    if(Input.GetKeyUp('W'))
+        animator->SetAnimation(vanim[2]);
 }
