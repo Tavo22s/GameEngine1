@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "Components/Camera.hpp"
+#include "Components/Light.hpp"
 #include "Gameobject.hpp"
 
 class Scene
@@ -15,6 +16,7 @@ class Scene
         void Update();
     
         std::vector<GameObject*> gameObjects;
+        std::vector<Light*> lights;
         std::string name;
 
         Camera *main_camera;

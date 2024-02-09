@@ -8,7 +8,12 @@ layout (location = 4) in vec3 aBiTangent;
 layout (location = 5) in ivec4 bone_ids;
 layout (location = 6) in vec4 weights;
 
-out vec2 TexCoords;
+out VS_OUT
+{
+    vec2 TexCoords;
+    vec3 FragPos;
+    vec3 Normal;
+} vs_out;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -27,6 +32,9 @@ void main()
 	vec4 boned_position = bone_transform * vec4(aPos, 1.0);
 
     mat4 MVP = projection * view * model;
-    TexCoords = aTexCoords;    
+    vs_out.TexCoords = aTexCoords;
+    vs_out.FragPos = vec3(model * boned_position);
+    vs_out.Normal = transpose(inverse(mat3(model))) * aNormal;
+    
     gl_Position = MVP * boned_position;
 }

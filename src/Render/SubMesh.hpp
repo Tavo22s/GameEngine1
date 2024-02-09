@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include "Texture.hpp"
 #include "Shader.hpp"
+#include "Material.hpp"
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -23,7 +24,7 @@ struct Vertex
 class SubMesh
 {
     public:
-        SubMesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture*> _textures);
+        SubMesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture*> _textures, Material *mat);
         ~SubMesh();
 
         void Render(Shader *);
@@ -35,6 +36,7 @@ class SubMesh
         void SetupMesh();
 
         unsigned int m_UIVAO, m_UIVBO, m_UIEBO;
+        Material *material;
 };
 
 #endif //SUBMESH_H

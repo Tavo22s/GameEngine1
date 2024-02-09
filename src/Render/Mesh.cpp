@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "../Engine/Utils.hpp"
+#include "../Render/Material.hpp"
 
 Mesh::Mesh()
 {
@@ -59,6 +60,7 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture*> textures;
+    Material *mat;
 
     for(unsigned int i=0; i<mesh->mNumVertices; i++)
     {
@@ -110,18 +112,32 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
     }
 
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    mat = new Material();
 
     std::vector<Texture*> diffuseMaps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    if(diffuseMaps.size() > 0)
+        mat->albedoMap = diffuseMaps[0];
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-    std::vector<Texture*> specularMaps = loadMaterialTexture(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
-    std::vector<Texture*> normalMaps= loadMaterialTexture(material, aiTextureType_HEIGHT, "texture_normal");
+    std::vector<Texture*> normalMaps= loadMaterialTexture(material, aiTextureType_NORMALS, "texture_normal");
+    if(normalMaps.size() > 0)
+        mat->normalMap = normalMaps[0];
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-    std::vector<Texture*> heightMaps = loadMaterialTexture(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    std::vector<Texture*> metallicMaps = loadMaterialTexture(material, aiTextureType_METALNESS, "texture_metallic");
+    if(metallicMaps.size() > 0)
+        mat->metallicMap = metallicMaps[0];
+    textures.insert(textures.end(), metallicMaps.begin(), metallicMaps.end());
+
+    std::vector<Texture*> roughnessMaps = loadMaterialTexture(material, aiTextureType_SHININESS, "texture_roughness");
+    if(roughnessMaps.size() > 0)
+        mat->roughnessMap = roughnessMaps[0];
+    textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
+
+    std::vector<Texture*> aoMaps = loadMaterialTexture(material, aiTextureType_LIGHTMAP, "texture_ao");
+    if(aoMaps.size() > 0)
+        mat->aoMap = aoMaps[0];
+    textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
     
     ExtractBoneWeightForVertices(vertices, mesh, scene);
 
@@ -142,7 +158,7 @@ SubMesh* Mesh::processMesh(aiMesh *mesh, const aiScene *scene)
             bone_index = m_bone_mapping[bone_name];
     }
 
-    return new SubMesh(vertices, indices, textures);
+    return new SubMesh(vertices, indices, textures, mat);
 }
 
 std::vector<Texture*> Mesh::loadMaterialTexture(aiMaterial *mat, aiTextureType type, std::string typeName)

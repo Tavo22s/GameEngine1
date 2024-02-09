@@ -2,18 +2,19 @@
 #include "SubMesh.hpp"
 #include "../Engine/Utils.hpp"
 
-SubMesh::SubMesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture*> _textures)
+SubMesh::SubMesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture*> _textures, Material *mat)
 {
     this->vertices = _vertices;
     this->indices = _indices;
     this->textures = _textures;
     m_UIVAO = m_UIVBO = m_UIEBO = 0;
+    material = mat;
     SetupMesh();
 }
 
 void SubMesh::Render(Shader *shader)
 {
-    unsigned int diffuseNr = 1;
+    /*unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
@@ -33,7 +34,8 @@ void SubMesh::Render(Shader *shader)
         std::string str = Utils::attach_strings(name, number);
         shader->setInt(Utils::attach_strings(str, number), i);
         textures[i]->Render();
-    }
+    }*/
+    material->Render(shader);
 
     glBindVertexArray(m_UIVAO);
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
